@@ -1,0 +1,157 @@
+{%- extends "basic/layout.html" %} {% set css_files = css_files +
+['_static/new-nav.css'] + ['_static/nav.css'] + ['_static/override_sphinx.css']
++ ['_static/banners.css'] %} {%- block extrahead %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ pathto('_static/custom.css', 1) }}"
+  type="text/css"
+/>
+{% if theme_touch_icon %}
+<link
+  rel="apple-touch-icon"
+  href="{{ pathto('_static/' ~ theme_touch_icon, 1) }}"
+/>
+{% endif %} {% if theme_canonical_url %}
+<link rel="canonical" href="{{ theme_canonical_url }}{{ pagename }}.html" /> {%
+endif %}
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=0.9, maximum-scale=0.9"
+/>
+<script src="{{ pathto('_static/Akko-Pro-All.js', 1) }}"></script>
+<!-- INTERCOM -->
+<script>
+  window.intercomSettings = {
+    app_id: 'ukpodv2l',
+  }
+</script>
+{% endblock %} {# Disable base theme's top+bottom related navs; we have our own
+in sidebar #} {%- block relbar1 %}{% endblock %} {%- block relbar2 %}{% endblock
+%} {# Nav should appear before content, not after #} {%- block content %}
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WCDX9CX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<header id="nav">
+  {%- include "remote-nav.html" %}
+</header>
+
+{%- if theme_fixed_sidebar|lower == 'true' %}
+<div class="document">
+  {{ sidebar() }} {%- block document %}
+  <div class="documentwrapper">
+    {%- if render_sidebar %}
+    <div class="bodywrapper">
+      {%- endif %}
+      <div class="body" role="main">
+        {% block body %}{% endblock %}
+      </div>
+      {%- if render_sidebar %}
+    </div>
+    {%- endif %}
+  </div>
+  {%- endblock %}
+  <div class="clearer"></div>
+</div>
+{%- else %} {{ super() }} {%- endif %} {%- endblock %} {%- block footer %}
+<footer>
+  <script charset="utf-8" type="text/javascript" src="https://js.hsforms.net/forms/v2.js"></script>
+  {%- include "remote-footer.html" %}
+</footer>
+<script>
+  ;(function(w, d, s, l, i) {
+    w[l] = w[l] || []
+    w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      dl = l != 'dataLayer' ? '&l=' + l : ''
+    j.async = true
+    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl
+    f.parentNode.insertBefore(j, f)
+  })(window, document, 'script', 'dataLayer', 'GTM-WCDX9CX')
+</script>
+<script>
+  function toggleMenu(menu) {
+    var element = document.querySelector(`#${menu}`)
+    var elementList = document.querySelectorAll('.navbar-ul')
+    elementList.forEach(e => {
+      if (e !== element) {
+        e.previousElementSibling.classList.add('notActive')
+        e.classList.add('visible')
+      }
+    })
+    if (!element.classList.contains('visible')) {
+      element.classList.add('visible')
+      elementList.forEach(e => {
+        e.previousElementSibling.classList.remove('notActive')
+      })
+    } else {
+      element.classList.remove('visible')
+      element.previousElementSibling.classList.remove('notActive')
+    }
+  }
+  function close() {
+    var elementList = document.querySelectorAll('.navbar-ul')
+    var subMenu = document.querySelectorAll('.sub-menu')
+    elementList.forEach(e => {
+      e.classList.add('visible')
+      e.previousElementSibling.classList.remove('notActive')
+    })
+    subMenu.forEach(e => {
+      e.classList.remove('showmenu')
+      console.dir(e)
+    })
+  }
+  function toggleOpen() {
+    var mobile = document.querySelector('.mobile-hamburger')
+    var mobileMenu = document.querySelector('.mobile-menu')
+    var subMenu = document.querySelectorAll('.sub-menu')
+    if (mobileMenu.classList.contains('dnone')) {
+      mobileMenu.classList.remove('dnone')
+    } else {
+      mobileMenu.classList.add('dnone')
+    }
+    subMenu.forEach(e => {
+      if (e.classList.contains('showmenu')) {
+        e.classList.remove('showmenu')
+      }
+    })
+    mobile.classList.toggle('open')
+    document.body.classList.toggle('mobile-scrolling')
+  }
+  function showMenu(menu) {
+    var element = document.querySelector(`.sub-menu-${menu}`)
+    if (element.classList.contains('showmenu')) {
+      element.classList.remove('showmenu')
+    } else {
+      element.classList.add('showmenu')
+    }
+  }
+  function closeMenu() {
+    var element = document.querySelectorAll('.sub-menu')
+    element.forEach(e => {
+      if (e.classList.contains('showmenu')) {
+        e.classList.remove('showmenu')
+      }
+    })
+  }
+  var navbar = document.querySelector('.navbar-menu')
+  document.addEventListener('click', function(event) {
+    var isClickInside = navbar.contains(event.target)
+    if (!isClickInside && window.innerWidth >= 1024) {
+      close()
+    }
+  })
+</script>
+
+{% if theme_github_banner|lower != 'false' %}
+<a
+  href="https://github.com/{{ theme_github_user }}/{{ theme_github_repo }}"
+  class="github"
+>
+  <img
+    style="position: absolute; top: 0; right: 0; border: 0;"
+    src="{{ pathto('_static/' ~ theme_github_banner, 1) if theme_github_banner|lower != 'true' else 'https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png' }}"
+    alt="Fork me on GitHub"
+    class="github"
+  />
+</a>
+{% endif %} {% if theme_analytics_id %} {% endif %} {%- endblock %}
